@@ -10,7 +10,7 @@ from tendril.config import REDIS_DB
 from tendril.config import REDIS_PASSWORD
 
 from tendril.utils import log
-logger = log.get_logger(__name__, log.DEBUG)
+logger = log.get_logger(__name__, log.DEFAULT)
 
 
 redis_connection: redis.Redis = None
@@ -46,17 +46,13 @@ def cache(namespace=None, ttl=None, key=None, ser=json.dumps, deser=json.loads):
             cache_key = "{}:{}".format(namespace, key(*args, **kwargs))
             cached_value = redis_connection.get(cache_key)
             if cached_value:
+                logger.debug("Cache Hit: {} {}".format(func, cache_key))
                 return deser(cached_value)
             value = func(*args, **kwargs)
-            logger.debug("Caching value '{}' for {} with key '{}'".format(value, func, cache_key))
+            logger.debug("Cache Miss: {} {}".format(func, cache_key))
             redis_connection.set(cache_key, ser(value), ex=ttl)
             return value
 
         return wrapper_func
 
     return _wrapper_factory
-
-
-@cache(namespace=None, ttl=None, key=None)
-def test_func(*args, **kwargs):
-    pass
