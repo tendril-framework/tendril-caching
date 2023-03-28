@@ -36,7 +36,8 @@ config_elements_redis = [
     ConfigOption(
         'REDIS_PASSWORD',
         "None",
-        "Redis Password"
+        "Redis Password",
+        masked=True
     ),
 ]
 
