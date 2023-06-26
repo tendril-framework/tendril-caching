@@ -22,7 +22,7 @@ if not TOKENS_CACHING_PROVIDER:
     TOKENS_CACHING_PROVIDER = PLATFORM_CACHING_PROVIDER
 
 if TOKENS_CACHING_PROVIDER == 'redis':
-    logger.info("Using Redis for the ticket cache.")
+    logger.info("Using Redis for the token cache.")
     import redis
     from tendril.config import REDIS_HOST
     from tendril.config import REDIS_PORT
@@ -59,7 +59,7 @@ class GenericTokenTModel(TendrilTBaseModel):
 
 def _create_redis_connection():
     global redis_connection
-    logger.info("Using Redis server at {}:{}:{} for ticket caching"
+    logger.info("Using Redis server at {}:{}:{} for token caching"
                 "".format(REDIS_HOST, REDIS_PORT, REDIS_DB))
     redis_connection = redis.Redis(host=REDIS_HOST,
                                    port=REDIS_PORT,

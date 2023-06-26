@@ -14,7 +14,7 @@ from tendril.utils import log
 logger = log.get_logger(__name__, log.DEFAULT)
 
 
-tokens_router = APIRouter(prefix='/token',
+tokens_router = APIRouter(prefix='/tokens',
                           tags=["Tokens API"],
                           dependencies=[Depends(authn_dependency),
                                         auth_spec(scopes=['interests:common'])]
