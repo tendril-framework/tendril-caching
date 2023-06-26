@@ -2,21 +2,25 @@
 
 import json
 
+from tendril.config import TRANSIT_CACHING_PROVIDER
 from tendril.config import PLATFORM_CACHING_PROVIDER
+
 
 from tendril.utils import log
 logger = log.get_logger(__name__, log.DEFAULT)
 
+if not TRANSIT_CACHING_PROVIDER:
+    TRANSIT_CACHING_PROVIDER = PLATFORM_CACHING_PROVIDER
 
-if PLATFORM_CACHING_PROVIDER == 'redis':
-    logger.info("Using Redis for the platform level cache.")
+if TRANSIT_CACHING_PROVIDER == 'redis':
+    logger.info("Using Redis for the transit cache.")
     import redis
     from tendril.config import REDIS_HOST
     from tendril.config import REDIS_PORT
     from tendril.config import REDIS_DB
     from tendril.config import REDIS_PASSWORD
 else:
-    raise Exception("A valid PLATFORM_CACHING_PROVIDER is not configured "
+    raise Exception("A valid TRANSIT_CACHING_PROVIDER is not configured "
                     "and a fallback is not presently implemented.")
 
 
@@ -46,6 +50,7 @@ def _common(namespace=None, key=None):
     if not namespace:
         logger.warn(f"No transit caching namespace was provided for "
                     f"key {key}. Using 'transit' instead.")
+        namespace = 'transit'
 
     cache_key = "{}:{}".format(namespace, key)
     return cache_key

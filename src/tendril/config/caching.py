@@ -14,6 +14,20 @@ config_elements_caching = [
         "Platform Caching Provider. "
         "Currently supports 'redis' and 'local'"
     ),
+    ConfigOption(
+        'TRANSIT_CACHING_PROVIDER',
+        "None",
+        "Provider to use for Transit Caching. These are typically atomic pieces of "
+        "meaningful but ephemeral information that must persist across disparate "
+        "API requests."
+    ),
+    ConfigOption(
+        'TOKENS_CACHING_PROVIDER',
+        "None",
+        "Provider to use for Token Caching. These are typically frequently written "
+        "datastructures that live across a multi-step operation and are used to "
+        "provide progress information. This is unrelated to auth tokens."
+    )
 ]
 
 
