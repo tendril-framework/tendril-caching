@@ -106,8 +106,6 @@ def open(namespace, metadata, ttl=None, key=None, user=None,
         'id': key
     }
     if user:
-        if not isinstance(user, int):
-            raise TypeError("Expecting an integer user reference")
         params['user'] = user
     if current:
         params['current'] = current
@@ -127,8 +125,11 @@ def read(namespace, key, tmodel=GenericTokenTModel):
 
 
 def update(namespace, key,
-           state: TokenStatus=None, current: str=None, done: int=None, max: int=None,
-           metadata=None, metadata_strategy='update', ttl=None, tmodel=GenericTokenTModel):
+           state: TokenStatus = None,
+           current: str = None,
+           done: int = None, max: int = None,
+           metadata=None, metadata_strategy='update',
+           ttl=None, tmodel=GenericTokenTModel):
     cache_key = _cache_key(namespace, key)
     data: GenericTokenTModel = _read(cache_key, tmodel=tmodel)
     if state:
@@ -139,7 +140,7 @@ def update(namespace, key,
         data.progress.done = done
     if max:
         data.progress.max = max
-    if metadata and metadata_strategy=='update':
+    if metadata and metadata_strategy == 'update':
         data.metadata = data.metadata.update(metadata)
     return _write(cache_key, data, ex=ttl)
 
