@@ -54,6 +54,7 @@ class GenericTokenTModel(TendrilTBaseModel):
     state: TokenStatus = Field(default=TokenStatus.NEW)
     user: Optional[UserReferenceTModel]
     current: Optional[str]
+    error: Optional[dict[str, Any]]
     progress: Optional[TokenProgressTModel]
 
 
@@ -129,7 +130,9 @@ def update(namespace, key,
            current: str = None,
            done: int = None, max: int = None,
            metadata=None, metadata_strategy='update',
+           error: dict = None,
            ttl=None, tmodel=GenericTokenTModel):
+    # TODO If no TTL provided, use the existing TTL
     cache_key = _cache_key(namespace, key)
     data: GenericTokenTModel = _read(cache_key, tmodel=tmodel)
     if state:
@@ -140,6 +143,8 @@ def update(namespace, key,
         data.progress.done = done
     if max:
         data.progress.max = max
+    if error:
+        data.error = error
     if metadata and metadata_strategy == 'update':
         data.metadata = data.metadata.update(metadata)
     return _write(cache_key, data, ex=ttl)
