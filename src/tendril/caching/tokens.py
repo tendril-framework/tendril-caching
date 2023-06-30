@@ -146,7 +146,7 @@ def update(namespace, key,
     if error:
         data.error = error
     if metadata and metadata_strategy == 'update':
-        data.metadata = data.metadata.update(metadata)
+        data.metadata.update(metadata)
     return _write(cache_key, data, ex=ttl)
 
 
