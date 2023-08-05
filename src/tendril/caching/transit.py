@@ -56,10 +56,10 @@ def _common(namespace=None, key=None):
     return cache_key
 
 
-def write(value=None, namespace=None, ttl=None, key=None, ser=json.dumps):
+def write(value=None, namespace=None, ttl=None, key=None, ser=json.dumps, get=False):
     cache_key = _common(namespace=namespace, key=key)
     logger.debug(f"Writing {value} to {cache_key}")
-    redis_connection.set(cache_key, ser(value), ex=ttl)
+    return redis_connection.set(cache_key, ser(value), ex=ttl, get=get)
 
 
 def read(namespace=None, key=None, deser=json.loads):
