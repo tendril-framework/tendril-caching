@@ -7,7 +7,7 @@ from tendril.config import TRANSIT_CACHING_PROVIDER
 from tendril.config import PLATFORM_CACHING_PROVIDER
 
 from tendril.utils import log
-logger = log.get_logger(__name__, log.DEBUG)
+logger = log.get_logger(__name__, log.DEFAULT)
 
 if not TRANSIT_CACHING_PROVIDER:
     TRANSIT_CACHING_PROVIDER = PLATFORM_CACHING_PROVIDER
