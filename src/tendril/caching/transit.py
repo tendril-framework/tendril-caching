@@ -1,13 +1,13 @@
 
 
 import json
+from decimal import Decimal
 
 from tendril.config import TRANSIT_CACHING_PROVIDER
 from tendril.config import PLATFORM_CACHING_PROVIDER
 
-
 from tendril.utils import log
-logger = log.get_logger(__name__, log.DEFAULT)
+logger = log.get_logger(__name__, log.DEBUG)
 
 if not TRANSIT_CACHING_PROVIDER:
     TRANSIT_CACHING_PROVIDER = PLATFORM_CACHING_PROVIDER
@@ -67,10 +67,24 @@ def read(namespace=None, key=None, deser=json.loads):
     cached_value = redis_connection.get(cache_key)
     logger.debug(f"Read {cached_value} from {cache_key}")
     if cached_value:
+        try:
+            if issubclass(deser, Decimal) and isinstance(cached_value, bytes):
+                cached_value = cached_value.decode()
+        except TypeError:
+            pass
         return deser(cached_value)
     else:
         return None
 
+def find_keys(namespace, pattern):
+    result = []
+    cursor = '0'
+    cache_key = _common(namespace, pattern)
+    logger.debug(f"Searching for keys with pattern {cache_key}")
+    while cursor != 0:
+        cursor, keys = redis_connection.scan(cursor=cursor, match=cache_key)
+        result.extend(keys)
+    return result
 
 def delete(namespace=None, key=None):
     cache_key = _common(namespace=namespace, key=key)
