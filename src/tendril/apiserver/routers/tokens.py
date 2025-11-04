@@ -3,8 +3,8 @@
 from fastapi import APIRouter
 from fastapi import Depends
 
-from tendril.authn.users import auth_spec
-from tendril.authn.users import authn_dependency
+from tendril.authn.users import security
+from tendril.authn.users import swagger_auth
 from tendril.authn.users import AuthUserModel
 
 from tendril.caching.tokens import GenericTokenTModel
@@ -16,8 +16,8 @@ logger = log.get_logger(__name__, log.DEFAULT)
 
 tokens_router = APIRouter(prefix='/tokens',
                           tags=["Tokens API"],
-                          dependencies=[Depends(authn_dependency),
-                                        auth_spec(scopes=['interests:common'])]
+                          dependencies=[Depends(swagger_auth),
+                                        security(scopes=['interests:common'])]
                           )
 
 

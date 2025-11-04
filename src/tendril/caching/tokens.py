@@ -28,12 +28,13 @@ if TOKENS_CACHING_PROVIDER == 'redis':
     from tendril.config import REDIS_PORT
     from tendril.config import REDIS_DB
     from tendril.config import REDIS_PASSWORD
+    redis_connection: redis.Redis = None
 else:
-    raise Exception("A valid TOKENS_CACHING_PROVIDER is not configured "
-                    "and a fallback is not presently implemented.")
-
-
-redis_connection: redis.Redis = None
+    logger.warning("A valid TOKENS_CACHING_PROVIDER is not configured "
+                   "and a fallback is not presently implemented. Anything that "
+                   "touches the tokens cache will likely cause catastrophic "
+                   "failure.")
+    redis_connection = None
 
 
 class TokenStatus(enum.Enum):

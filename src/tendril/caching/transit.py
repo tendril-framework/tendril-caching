@@ -7,7 +7,7 @@ from tendril.config import TRANSIT_CACHING_PROVIDER
 from tendril.config import PLATFORM_CACHING_PROVIDER
 
 from tendril.utils import log
-logger = log.get_logger(__name__, log.DEFAULT)
+logger = log.get_logger(__name__)
 
 if not TRANSIT_CACHING_PROVIDER:
     TRANSIT_CACHING_PROVIDER = PLATFORM_CACHING_PROVIDER
@@ -20,8 +20,10 @@ if TRANSIT_CACHING_PROVIDER == 'redis':
     from tendril.config import REDIS_DB
     from tendril.config import REDIS_PASSWORD
 else:
-    raise Exception("A valid TRANSIT_CACHING_PROVIDER is not configured "
-                    "and a fallback is not presently implemented.")
+    logger.warning("A valid TRANSIT_CACHING_PROVIDER is not configured "
+                   "and a fallback is not presently implemented. Anything that "
+                   "touches the transit cache will likely cause catastrophic "
+                   "failure.")
 
 
 redis_connection: redis.Redis = None
